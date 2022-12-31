@@ -63,6 +63,22 @@ class Gui implements ActionListener, KeyListener {
         if(e.getKeyCode() == KeyEvent.VK_5) {
             numberButton[5].doClick();
         }
+        if(e.getKeyCode() == KeyEvent.VK_6) {
+            numberButton[6].doClick();
+        }
+        if(e.getKeyCode() == KeyEvent.VK_7) {
+            numberButton[7].doClick();
+        }
+        if(e.getKeyCode() == KeyEvent.VK_8) {
+            numberButton[8].doClick();
+        }
+        if(e.getKeyCode() == KeyEvent.VK_9) {
+            numberButton[9].doClick();
+        }
+        if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+            System.exit(0);
+        }
+
 
     }
     Gui() throws IOException, FontFormatException {
