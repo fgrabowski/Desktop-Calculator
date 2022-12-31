@@ -1,16 +1,17 @@
-package org.fgrabowski;
-
-import org.apache.commons.lang3.StringUtils;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 
-class Gui implements ActionListener, KeyListener {
+class Gui implements ActionListener {
+
+
+
+
     JFrame frame;
     JTextField textField;
     JButton[] numberButton = new JButton[10];
@@ -19,70 +20,16 @@ class Gui implements ActionListener, KeyListener {
     JButton decButton, eqButton, delButton, clrButton;
     JPanel tab;
 
+    Shape shape = new Ellipse2D.Double(0, 0, 200, 200);
+
+
     double num1 = 0.0, num2 = 0.0, num3 = 0.0;
     char operator;
 
     boolean isSolved = false;
+    Font font = Font.createFont(Font.TRUETYPE_FONT, Main.class.getResourceAsStream("Helvetica.ttf"));
 
-    Font font = new Font("Arial", Font.BOLD, 30);
-
-    @Override
-    public void keyTyped(final KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyPressed(final KeyEvent e) {
-
-    }
-
-    @Override
-    public void keyReleased(final KeyEvent e) {
-        System.out.println("Key clicked" + e.getKeyCode());
-        if(e.getKeyCode() == KeyEvent.VK_BACK_SPACE) {
-            textField.setText(StringUtils.chop(textField.getText()));
-        }
-        if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-            eqButton.doClick();
-        }
-        if(e.getKeyCode() == KeyEvent.VK_0) {
-            numberButton[0].doClick();
-        }
-        if(e.getKeyCode() == KeyEvent.VK_1) {
-            numberButton[1].doClick();
-        }
-        if(e.getKeyCode() == KeyEvent.VK_2) {
-            numberButton[2].doClick();
-        }
-        if(e.getKeyCode() == KeyEvent.VK_3) {
-            numberButton[3].doClick();
-        }
-        if(e.getKeyCode() == KeyEvent.VK_4) {
-            numberButton[4].doClick();
-        }
-        if(e.getKeyCode() == KeyEvent.VK_5) {
-            numberButton[5].doClick();
-        }
-        if(e.getKeyCode() == KeyEvent.VK_6) {
-            numberButton[6].doClick();
-        }
-        if(e.getKeyCode() == KeyEvent.VK_7) {
-            numberButton[7].doClick();
-        }
-        if(e.getKeyCode() == KeyEvent.VK_8) {
-            numberButton[8].doClick();
-        }
-        if(e.getKeyCode() == KeyEvent.VK_9) {
-            numberButton[9].doClick();
-        }
-        if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-            System.exit(0);
-        }
-
-
-    }
     Gui() throws IOException, FontFormatException {
-
         frame = new JFrame("Calculator");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setSize(420, 550);
@@ -103,10 +50,9 @@ class Gui implements ActionListener, KeyListener {
         subButton = new JButton("-");
         mulButton = new JButton("*");
         divButton = new JButton("/");
-        decButton = new JButton(",");
+        decButton = new JButton(".");
         eqButton = new JButton("=");
         clrButton = new JButton("C");
-        delButton = new JButton("DEL");
 
         functionButton[0] = addButton;
         functionButton[1] = subButton;
@@ -115,18 +61,13 @@ class Gui implements ActionListener, KeyListener {
         functionButton[4] = decButton;
         functionButton[5] = eqButton;
         functionButton[6] = clrButton;
-        functionButton[7] = delButton;
 
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 7; i++) {
             functionButton[i].addActionListener(this);
             functionButton[i].setFont(font.deriveFont(35f));
             functionButton[i].setFocusable(false);
             functionButton[i].setBackground(new Color(51, 153, 255));
             functionButton[i].setForeground(Color.black);
-            functionButton[i].setBorder( new LineBorder(new Color(230, 155, 40)) );
-            functionButton[i].setOpaque(true);
-            functionButton[i].setBackground(new Color(230, 155, 40));
-            functionButton[i].setContentAreaFilled(true);
         }
 
         for (int i = 0; i < 10; i++) {
@@ -142,7 +83,7 @@ class Gui implements ActionListener, KeyListener {
 
         clrButton.setBounds(205, 430, 145, 50);
 
-        tab = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        tab = new JPanel();
 
         tab.setBounds(50, 100, 300, 300);
         tab.setLayout(new GridLayout(4, 4, 10, 10));
@@ -177,12 +118,10 @@ class Gui implements ActionListener, KeyListener {
         frame.add(textField);
         frame.setBackground(Color.BLACK);
         frame.setVisible(true);
-        frame.addKeyListener(this);
-        frame.setFocusable(true);
-        frame.setFocusTraversalKeysEnabled(false);
 
 
     }
+
     @Override
     public void actionPerformed(final ActionEvent e) {
         for(int i = 0; i < 10; i++) {
@@ -194,13 +133,7 @@ class Gui implements ActionListener, KeyListener {
                 textField.setText(textField.getText().concat(String.valueOf(i)));
             }}
         if (e.getSource() == decButton) {
-            if(!(textField.getText().contains("."))) {
-                if (textField.getText().isEmpty()) {
-                    textField.setText("0.");
-                } else {
-                    textField.setText(textField.getText().concat("."));
-                }
-            }
+            textField.setText(textField.getText().concat("."));
         }
         if (e.getSource() == addButton) {
             num1 = Double.parseDouble(textField.getText());
@@ -249,8 +182,14 @@ class Gui implements ActionListener, KeyListener {
                 textField.setText("");
 
             }
+            if (e.getSource() == delButton) {
+                String string = textField.getText();
+                textField.setText("");
+                for (int i = 0; i < string.length() - 1; i++) {
+                    textField.setText(textField.getText() + string.charAt(i));
+                }
+            }
         }
 
     }
-
 }
